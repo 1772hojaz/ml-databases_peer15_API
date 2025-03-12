@@ -1,0 +1,6 @@
+fastapi==0.100.0  # Use FastAPI 0.100.0 or higher
+uvicorn==0.34.0
+pydantic==2.10.1  # Keep Pydantic 2.x
+sqlalchemy==2.0.18
+pymysql==1.0.2
+cryptography==41.0.3
