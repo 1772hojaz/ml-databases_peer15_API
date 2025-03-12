@@ -3,7 +3,7 @@ import pymysql
 import os
 from pydantic import BaseModel
 
-# Initialize FastAPI app
+# Initialize FastAPI App
 app = FastAPI()
 
 # Database connection configuration
