@@ -32,5 +32,3 @@ databases:
     user: root
     region: ohio  # Choose your preferred region
     plan: free  # Use "free" for testing or "starter" for production
-    engine: mysql
-    version: 8.0  # MySQL version
