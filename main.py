@@ -23,54 +23,6 @@ def get_db_connection():
     except pymysql.Error as e:
         raise HTTPException(status_code=500, detail=f"Database connection error: {str(e)}")
 
-# Function to execute SQL from a file
-def execute_sql_file(sql_file: str):
-    connection = get_db_connection()
-    cursor = connection.cursor()
-    try:
-        with open(sql_file, 'r') as file:
-            sql_script = file.read()
-
-        # Split the SQL script into individual statements
-        sql_statements = [stmt.strip() for stmt in sql_script.split(';') if stmt.strip()]
-
-        # Execute each statement one by one
-        for statement in sql_statements:
-            try:
-                cursor.execute(statement)
-                connection.commit()
-            except pymysql.err.OperationalError as e:
-                # Ignore "database exists" (1007) and "table already exists" (1050) errors
-                if e.args[0] == 1007 or e.args[0] == 1050:
-                    print(f"Ignoring error: {str(e)}")
-                else:
-                    raise e  # Re-raise other errors
-            except pymysql.err.ProgrammingError as e:
-                # Ignore other programming errors (e.g., syntax errors)
-                print(f"Ignoring error: {str(e)}")
-
-        print(f"Executed SQL file: {sql_file}")
-    except Exception as e:
-        print(f"Error executing SQL file {sql_file}: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Error executing SQL file: {str(e)}")
-    finally:
-        cursor.close()
-        connection.close()
-
-# Execute schema.sql and data.sql on startup
-@app.on_event("startup")
-def initialize_database():
-    try:
-        print("Initializing database...")
-        # Execute schema.sql to create tables
-        execute_sql_file("sqlSchema.sql")
-        # Execute data.sql to insert data
-        execute_sql_file("data.sql")
-        print("Database initialization complete!")
-    except Exception as e:
-        print(f"Database initialization failed: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Database initialization failed: {str(e)}")
-
 # Pydantic models for request validation
 class PatientCreate(BaseModel):
     age: int
@@ -229,3 +181,8 @@ def get_diagnoses():
     finally:
         cursor.close()
         connection.close()
+
+# Root endpoint
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to the Liver Disease Prediction API"}
