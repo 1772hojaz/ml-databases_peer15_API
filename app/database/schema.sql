@@ -1,5 +1,7 @@
 -- Create the database (if it doesn't exist)
 CREATE DATABASE IF NOT EXISTS mlgroup_childrenof;
+
+-- Use the database
 USE mlgroup_childrenof;
 
 -- Table: patients
@@ -21,7 +23,7 @@ CREATE TABLE IF NOT EXISTS medical_tests (
     total_proteins FLOAT NOT NULL,
     albumin FLOAT NOT NULL,
     albumin_and_globulin_ratio FLOAT NOT NULL,
-    FOREIGN KEY (patient_id) REFERENCES patients(patient_id)
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE
 );
 
 -- Table: diagnosis
@@ -29,17 +31,23 @@ CREATE TABLE IF NOT EXISTS diagnosis (
     diagnosis_id INT AUTO_INCREMENT PRIMARY KEY,
     patient_id INT NOT NULL,
     diagnosis TINYINT(1) NOT NULL,
-    FOREIGN KEY (patient_id) REFERENCES patients(patient_id)
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE
 );
 
+-- Drop the stored procedure if it already exists
+DROP PROCEDURE IF EXISTS CalculateAverageAge;
+
 -- Stored Procedure: Calculate Average Age of Patients
-CREATE PROCEDURE IF NOT EXISTS CalculateAverageAge()
+CREATE PROCEDURE CalculateAverageAge()
 BEGIN
     SELECT AVG(age) AS average_age FROM patients;
 END;
 
+-- Drop the trigger if it already exists
+DROP TRIGGER IF EXISTS BeforeInsertPatient;
+
 -- Trigger: Validate Age Before Insert
-CREATE TRIGGER IF NOT EXISTS BeforeInsertPatient
+CREATE TRIGGER BeforeInsertPatient
 BEFORE INSERT ON patients
 FOR EACH ROW
 BEGIN
