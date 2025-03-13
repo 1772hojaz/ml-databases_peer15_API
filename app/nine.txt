@@ -67,7 +67,7 @@ def create_patient(patient: PatientCreate):
 @app.get("/patients/")
 def get_patients():
     connection = get_db_connection()
-    cursor = connection.cursor(dictionary=True)  # Use dictionary cursor
+    cursor = connection.cursor()
     try:
         query = "SELECT * FROM patients"
         cursor.execute(query)
@@ -117,6 +117,7 @@ def delete_patient(patient_id: int):
     finally:
         cursor.close()
         connection.close()
+
 # Create (POST) - Add a new medical test
 @app.post("/medical_tests/")
 def create_medical_test(test: MedicalTestCreate):
