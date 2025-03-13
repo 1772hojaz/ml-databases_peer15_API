@@ -1,7 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import List, Dict
-from app.connection import get_db_connection  # Ensure this import is correct
+from app.connection import get_db_connection
 
 # Initialize FastAPI App
 app = FastAPI()
@@ -15,7 +14,7 @@ class MedicalTestCreate(BaseModel):
     patient_id: int
     total_bilirubin: float
     direct_bilirubin: float
-    alkaline_phosphatase: int  # Fixed typo
+    alkaline_phosphotase: int
     alamine_aminotransferase: int
     aspartate_aminotransferase: int
     total_proteins: float
@@ -45,7 +44,7 @@ def convert_binary_to_gender(gender: int) -> str:
         raise ValueError("Gender must be 0 or 1")
 
 # Create (POST) - Add a new patient
-@app.post("/patients/", response_model=Dict[str, str])
+@app.post("/patients/")
 def create_patient(patient: PatientCreate):
     connection = get_db_connection()
     cursor = connection.cursor()
@@ -65,7 +64,7 @@ def create_patient(patient: PatientCreate):
         connection.close()
 
 # Read (GET) - Get all patients
-@app.get("/patients/", response_model=Dict[str, List[Dict]])
+@app.get("/patients/")
 def get_patients():
     connection = get_db_connection()
     cursor = connection.cursor()
@@ -84,7 +83,7 @@ def get_patients():
         connection.close()
 
 # Update (PUT) - Update a patient
-@app.put("/patients/{patient_id}", response_model=Dict[str, str])
+@app.put("/patients/{patient_id}")
 def update_patient(patient_id: int, patient: PatientCreate):
     connection = get_db_connection()
     cursor = connection.cursor()
@@ -104,7 +103,7 @@ def update_patient(patient_id: int, patient: PatientCreate):
         connection.close()
 
 # Delete (DELETE) - Delete a patient
-@app.delete("/patients/{patient_id}", response_model=Dict[str, str])
+@app.delete("/patients/{patient_id}")
 def delete_patient(patient_id: int):
     connection = get_db_connection()
     cursor = connection.cursor()
@@ -120,21 +119,21 @@ def delete_patient(patient_id: int):
         connection.close()
 
 # Create (POST) - Add a new medical test
-@app.post("/medical_tests/", response_model=Dict[str, str])
+@app.post("/medical_tests/")
 def create_medical_test(test: MedicalTestCreate):
     connection = get_db_connection()
     cursor = connection.cursor()
     try:
         query = """
         INSERT INTO medical_tests (
-            patient_id, total_bilirubin, direct_bilirubin, alkaline_phosphatase,
+            patient_id, total_bilirubin, direct_bilirubin, alkaline_phosphotase,
             alamine_aminotransferase, aspartate_aminotransferase, total_proteins,
             albumin, albumin_and_globulin_ratio
         ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
         cursor.execute(query, (
             test.patient_id, test.total_bilirubin, test.direct_bilirubin,
-            test.alkaline_phosphatase, test.alamine_aminotransferase,
+            test.alkaline_phosphotase, test.alamine_aminotransferase,
             test.aspartate_aminotransferase, test.total_proteins,
             test.albumin, test.albumin_and_globulin_ratio
         ))
@@ -147,7 +146,7 @@ def create_medical_test(test: MedicalTestCreate):
         connection.close()
 
 # Read (GET) - Get all medical tests
-@app.get("/medical_tests/", response_model=Dict[str, List[Dict]])
+@app.get("/medical_tests/")
 def get_medical_tests():
     connection = get_db_connection()
     cursor = connection.cursor()
@@ -163,20 +162,15 @@ def get_medical_tests():
         connection.close()
 
 # Create (POST) - Add a new diagnosis
-@app.post("/diagnosis/", response_model=Dict[str, str])
+@app.post("/diagnosis/")
 def create_diagnosis(diagnosis: DiagnosisCreate):
     connection = get_db_connection()
     cursor = connection.cursor()
     try:
-        # Validate diagnosis value (must be 0 or 1)
-        if diagnosis.diagnosis not in [0, 1]:
-            raise ValueError("Diagnosis must be 0 or 1")
         query = "INSERT INTO diagnosis (patient_id, diagnosis) VALUES (%s, %s)"
         cursor.execute(query, (diagnosis.patient_id, diagnosis.diagnosis))
         connection.commit()
         return {"message": "Diagnosis created successfully"}
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
     finally:
@@ -184,7 +178,7 @@ def create_diagnosis(diagnosis: DiagnosisCreate):
         connection.close()
 
 # Read (GET) - Get all diagnoses
-@app.get("/diagnosis/", response_model=Dict[str, List[Dict]])
+@app.get("/diagnosis/")
 def get_diagnoses():
     connection = get_db_connection()
     cursor = connection.cursor()
@@ -200,6 +194,6 @@ def get_diagnoses():
         connection.close()
 
 # Root endpoint
-@app.get("/", response_model=Dict[str, str])
+@app.get("/")
 def read_root():
     return {"message": "Welcome to the Liver Disease Prediction API"}
