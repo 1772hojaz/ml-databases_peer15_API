@@ -37,21 +37,33 @@ CREATE TABLE IF NOT EXISTS diagnosis (
 -- Drop the stored procedure if it already exists
 DROP PROCEDURE IF EXISTS CalculateAverageAge;
 
+-- Change the delimiter to avoid conflicts with semicolons in the procedure body
+DELIMITER $$
+
 -- Stored Procedure: Calculate Average Age of Patients
-CREATE PROCEDURE CalculateAverageAge()
+CREATE DEFINER = 'mlgroup_childrenof'@'%' PROCEDURE CalculateAverageAge()
 BEGIN
     SELECT AVG(age) AS average_age FROM patients;
-END;
+END$$
+
+-- Reset the delimiter back to semicolon
+DELIMITER ;
 
 -- Drop the trigger if it already exists
 DROP TRIGGER IF EXISTS BeforeInsertPatient;
 
+-- Change the delimiter again for the trigger definition
+DELIMITER $$
+
 -- Trigger: Validate Age Before Insert
-CREATE TRIGGER BeforeInsertPatient
+CREATE DEFINER = 'mlgroup_childrenof'@'%' TRIGGER BeforeInsertPatient
 BEFORE INSERT ON patients
 FOR EACH ROW
 BEGIN
     IF NEW.age < 0 THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Age cannot be negative';
     END IF;
-END;
+END$$
+
+-- Reset the delimiter back to semicolon
+DELIMITER ;

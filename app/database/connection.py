@@ -4,12 +4,13 @@ from mysql.connector import Error
 def get_db_connection():
     try:
         connection = mysql.connector.connect(
-            host="orgr9.h.filess.io",  # Database host
-            database="mlgroup_childrenof",  # Database name
-            user="mlgroup_childrenof",  # Database username
-            password="284b5b9f1bf250ee916853314f97240c8317249e",  # Database password
+            host="ku2ag.h.filess.io",  # Database host
+            database="liverDisease_soilbrass",  # Database name
+            user="liverDisease_soilbrass",  # Database username
+            password="863f959b357d8fbb9e466fc5ca6ba6b96341cf03",  # Database password
             port=3307  # Database port
         )
         return connection
     except Error as e:
         raise Exception(f"Database connection error: {str(e)}")
+
