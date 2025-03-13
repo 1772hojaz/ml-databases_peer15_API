@@ -4,3 +4,4 @@ pydantic==2.10.1  # Keep Pydantic 2.x
 sqlalchemy==2.0.18
 pymysql==1.0.2
 cryptography==41.0.3
+mysql-connector-python==8.1.0
