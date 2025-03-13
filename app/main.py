@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from app.connection import get_db_connection
+from app.connection import get_db_connection  # Ensure this import is correct
 
 # Initialize FastAPI App
 app = FastAPI()
@@ -8,7 +8,7 @@ app = FastAPI()
 # Pydantic models for request validation
 class PatientCreate(BaseModel):
     age: int
-    gender: str  # "male" or "female"
+    gender: str  # Accepts "male" or "female"
 
 class MedicalTestCreate(BaseModel):
     patient_id: int
@@ -49,12 +49,14 @@ def create_patient(patient: PatientCreate):
     connection = get_db_connection()
     cursor = connection.cursor()
     try:
-        # Convert gender to binary
+        # Convert gender to binary (1 for male, 0 for female)
         gender_binary = convert_gender_to_binary(patient.gender)
         query = "INSERT INTO patients (age, gender) VALUES (%s, %s)"
         cursor.execute(query, (patient.age, gender_binary))
         connection.commit()
         return {"message": "Patient created successfully"}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
     finally:
@@ -92,6 +94,8 @@ def update_patient(patient_id: int, patient: PatientCreate):
         cursor.execute(query, (patient.age, gender_binary, patient_id))
         connection.commit()
         return {"message": "Patient updated successfully"}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
     finally:
