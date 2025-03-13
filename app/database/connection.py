@@ -1,14 +1,14 @@
 import pymysql
-import os
 
 def get_db_connection():
     try:
         connection = pymysql.connect(
-            host=os.getenv("DATABASE_HOST"),
-            user=os.getenv("DATABASE_USER"),
-            password=os.getenv("DATABASE_PASSWORD"),
-            database=os.getenv("DATABASE_NAME"),
-            cursorclass=pymysql.cursors.DictCursor
+            host="orgr9.h.filess.io",  # Database host
+            user="mlgroup_childrenof",  # Database username
+            password="284b5b9f1bf250ee916853314f97240c8317249e",  # Database password
+            database="mlgroup_childrenof",  # Database name
+            port=3307,  # Database port
+            cursorclass=pymysql.cursors.DictCursor  # Use dictionary cursors
         )
         return connection
     except pymysql.Error as e:

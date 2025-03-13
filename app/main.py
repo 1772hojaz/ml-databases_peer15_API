@@ -8,10 +8,11 @@ app = FastAPI()
 
 # Database connection configuration
 db_config = {
-    "host": os.getenv("DATABASE_HOST", "localhost"),  # Default to localhost if not set
-    "user": os.getenv("DATABASE_USER", "root"),   # Default to app_user if not set
-    "password": os.getenv("DATABASE_PASSWORD", "StrongPassword123!"),  # Default password
-    "database": os.getenv("DATABASE_NAME", "liver_disease_db"),  # Default database name
+    "host": "orgr9.h.filess.io",  # Database host
+    "user": "mlgroup_childrenof",  # Database username
+    "password": "284b5b9f1bf250ee916853314f97240c8317249e",  # Database password
+    "database": "mlgroup_childrenof",  # Database name
+    "port": 3307,  # Database port
     "cursorclass": pymysql.cursors.DictCursor  # Use dictionary cursors
 }
 

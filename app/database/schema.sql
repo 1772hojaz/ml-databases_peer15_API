@@ -1,6 +1,6 @@
 -- Create the database (if it doesn't exist)
-CREATE DATABASE IF NOT EXISTS liver_disease_db;
-USE liver_disease_db;
+CREATE DATABASE IF NOT EXISTS mlgroup_childrenof;
+USE mlgroup_childrenof;
 
 -- Table: patients
 CREATE TABLE IF NOT EXISTS patients (
