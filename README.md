@@ -40,6 +40,7 @@ This project provides a FastAPI-based RESTful API for managing patient data, med
 - GET /patients/{patient_id}: Retrieve a specific patient by ID.
 - PUT /patients/{patient_id}: Update a patient by ID.
 - DELETE /patients/{patient_id}: Delete a patient by ID.
+- 
   ---
 - **Medical Test Endpoints**
 - 
@@ -48,6 +49,7 @@ This project provides a FastAPI-based RESTful API for managing patient data, med
 - GET /medical_tests/{test_id}: Retrieve a specific medical test by ID.
 - PUT /medical_tests/{test_id}: Update a medical test by ID.
 - DELETE /medical_tests/{test_id}: Delete a medical test by ID.
+- 
   ---
 - **Diagnosis Endpoints**
 - 
