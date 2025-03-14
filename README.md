@@ -36,7 +36,7 @@ This project provides a FastAPI-based RESTful API for managing patient data, med
     ```json
     {
       "age": 30,
-      "gender": "male"
+      "gender": "1"
     }
     ```
 

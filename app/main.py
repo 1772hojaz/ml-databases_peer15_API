@@ -9,7 +9,7 @@ app = FastAPI()
 
 # Pydantic models for request validation
 class PatientCreate(BaseModel):
-    age: conint(ge=0, le=120)  # Age must be between 0 and 120
+    age: conint(ge=0, le=120)
     gender: conint(ge=0, le=1)  # 1 for male, 0 for female
 
 class MedicalTestCreate(BaseModel):
@@ -65,7 +65,8 @@ def get_db_cursor():
         cursor.close()
         connection.close()
 
-# Create (POST) - Add a new patient
+# Add a new patient
+
 @app.post("/patients/", response_model=PatientResponse)
 def create_patient(patient: PatientCreate):
     with get_db_cursor() as cursor:
@@ -74,7 +75,8 @@ def create_patient(patient: PatientCreate):
         patient_id = cursor.lastrowid
         return {"patient_id": patient_id, **patient.dict()}
 
-# Read (GET) - Get all patients
+# Get all patients
+
 @app.get("/patients/", response_model=List[PatientResponse])
 def get_patients():
     with get_db_cursor() as cursor:
@@ -83,7 +85,8 @@ def get_patients():
         patients = cursor.fetchall()
         return patients
 
-# Update (PUT) - Update a patient
+# Update a patient
+
 @app.put("/patients/{patient_id}", response_model=PatientResponse)
 def update_patient(patient_id: int, patient: PatientCreate):
     with get_db_cursor() as cursor:
@@ -93,7 +96,8 @@ def update_patient(patient_id: int, patient: PatientCreate):
             raise HTTPException(status_code=404, detail="Patient not found")
         return {"patient_id": patient_id, **patient.dict()}
 
-# Delete (DELETE) - Delete a patient
+# Delete a patient
+
 @app.delete("/patients/{patient_id}")
 def delete_patient(patient_id: int):
     with get_db_cursor() as cursor:
@@ -103,7 +107,8 @@ def delete_patient(patient_id: int):
             raise HTTPException(status_code=404, detail="Patient not found")
         return {"message": "Patient deleted successfully"}
 
-# Create (POST) - Add a new medical test
+# Add a new medical test
+
 @app.post("/medical_tests/", response_model=MedicalTestResponse)
 def create_medical_test(test: MedicalTestCreate):
     with get_db_cursor() as cursor:
@@ -123,7 +128,8 @@ def create_medical_test(test: MedicalTestCreate):
         test_id = cursor.lastrowid
         return {"test_id": test_id, **test.dict()}
 
-# Read (GET) - Get all medical tests
+# Get all medical tests
+
 @app.get("/medical_tests/", response_model=List[MedicalTestResponse])
 def get_medical_tests():
     with get_db_cursor() as cursor:
@@ -132,7 +138,8 @@ def get_medical_tests():
         tests = cursor.fetchall()
         return tests
 
-# Create (POST) - Add a new diagnosis
+# Add a new diagnosis
+
 @app.post("/diagnosis/", response_model=DiagnosisResponse)
 def create_diagnosis(diagnosis: DiagnosisCreate):
     with get_db_cursor() as cursor:
@@ -141,7 +148,8 @@ def create_diagnosis(diagnosis: DiagnosisCreate):
         diagnosis_id = cursor.lastrowid
         return {"diagnosis_id": diagnosis_id, **diagnosis.dict()}
 
-# Read (GET) - Get all diagnoses
+# Get all diagnoses
+
 @app.get("/diagnosis/", response_model=List[DiagnosisResponse])
 def get_diagnoses():
     with get_db_cursor() as cursor:
@@ -150,7 +158,8 @@ def get_diagnoses():
         diagnoses = cursor.fetchall()
         return diagnoses
 
-# Update (PUT) - Update a diagnosis
+# Update a diagnosis
+
 @app.put("/diagnosis/{diagnosis_id}", response_model=DiagnosisResponse)
 def update_diagnosis(diagnosis_id: int, diagnosis: DiagnosisCreate):
     with get_db_cursor() as cursor:
@@ -160,7 +169,8 @@ def update_diagnosis(diagnosis_id: int, diagnosis: DiagnosisCreate):
             raise HTTPException(status_code=404, detail="Diagnosis not found")
         return {"diagnosis_id": diagnosis_id, **diagnosis.dict()}
 
-# Delete (DELETE) - Delete a diagnosis
+# Delete a diagnosis
+
 @app.delete("/diagnosis/{diagnosis_id}")
 def delete_diagnosis(diagnosis_id: int):
     with get_db_cursor() as cursor:
